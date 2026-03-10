@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "gradle",
+			"id": "d:\\ИТМО\\Java\\Lab5runLab5",
+			"script": "run",
+			"description": "Runs this project as a JVM application",
+			"group": "application",
+			"project": "Lab5",
+			"buildFile": "D:\\ИТМО\\Java\\Lab5\\build.gradle",
+			"rootProject": "Lab5",
+			"projectFolder": "d:\\ИТМО\\Java\\Lab5",
+			"workspaceFolder": "d:\\ИТМО\\Java\\Lab5",
+			"args": "-DDATA_SHEET_PATH=D:/ИТМО/Java/Lab5/app/build/classes/java/main/se/ifmo/blazingzephyr/data.csv",
+			"javaDebug": false,
+			"problemMatcher": [
+				"$gradle"
+			],
+			"label": "gradle: run"
+		}
+	]
+}
