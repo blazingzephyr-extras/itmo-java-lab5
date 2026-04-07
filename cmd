@@ -1,0 +1,3 @@
+history
+show
+execute_script cmd2

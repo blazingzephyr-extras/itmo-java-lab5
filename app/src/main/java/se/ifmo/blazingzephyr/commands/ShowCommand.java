@@ -1,50 +1,65 @@
 package se.ifmo.blazingzephyr.commands;
 
-import se.ifmo.blazingzephyr.model.Organization;
+import java.util.stream.Collectors;
 import se.ifmo.blazingzephyr.utility.Context;
+import se.ifmo.blazingzephyr.utility.TableUtility;
 
+/**
+ * Выводит коллекцию в удобный для пользователя вид.
+ * @author blazingzephyr
+ * @version 1.0
+ */
 public class ShowCommand implements Command {
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "show";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getSyntax()
-    {
+    public String getSyntax() {
         return "";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String[] getArguments()
-    {
+    public String[] getArguments() {
         return new String[] {};
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getDescription()
-    {
+    public String getDescription() {
         return "Выводит в стандартный поток вывода все элементы коллекции в строковом представлении.";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void execute(Context context, String[] args)
-    {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Элементы коллекции: {");
-        builder.append(context.getCollectionSize());
-        builder.append("}");
-        builder.append('\n');
-
-        for (Organization org : context.getElements())
-        {
-            builder.append('\n');
-            builder.append(org);
-            builder.append('\n');
+    public String execute(Context ctx, String[] args) {    
+        if (ctx.collection().isEmpty()) {
+            return "Коллекция пуста.";
         }
 
-        context.println(builder.toString());
+        return String.format(
+            "Количество элементов: %d%n%s%n%s",
+            ctx.collection().size(),
+            TableUtility.getHeader(),
+            ctx.collection()
+                .stream()
+                .map(TableUtility::getEntry)
+                .collect(Collectors.joining("\n"))
+        );
     }
 }

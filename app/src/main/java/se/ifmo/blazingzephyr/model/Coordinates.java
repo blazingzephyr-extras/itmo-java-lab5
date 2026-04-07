@@ -6,9 +6,9 @@ package se.ifmo.blazingzephyr.model;
  * @version 1.0
  */
 public final class Coordinates {
-    private Double x; // Максимальное значение поля: 213, Поле не может быть null
+    private Double x;   // Максимальное значение поля: 213, Поле не может быть null
     private float y;
-    
+
     /**
      * Пустой конструктор координат.
      * Устанавливает координаты в точку (0, 0).
@@ -31,12 +31,10 @@ public final class Coordinates {
      * @throws IllegalArgumentException
      */
     public Coordinates setX(Double x) {
-        if (x == null)
-        {
+        if (x == null) {
             throw new IllegalArgumentException("Поле 'x' не может быть null.");
         }
-        if (x > 213)
-        {
+        if (x > 213) {
             throw new IllegalArgumentException("Максимальное значение 'x' - 213.");
         }
 

@@ -2,90 +2,58 @@ package se.ifmo.blazingzephyr;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import se.ifmo.blazingzephyr.commands.*;
-import se.ifmo.blazingzephyr.managers.*;
-import se.ifmo.blazingzephyr.managers.PromptManager.CommandPrompt;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Stack;
+import se.ifmo.blazingzephyr.commands.Command;
+import se.ifmo.blazingzephyr.model.Organization;
+import se.ifmo.blazingzephyr.utility.CommandUtility;
 import se.ifmo.blazingzephyr.utility.Context;
+import se.ifmo.blazingzephyr.utility.FileUtility;
 
+/**
+ * Класс, содержащий точку входа.
+ * @author blazingzephyr
+ * @version 1.0
+ */
 public class App {
 
+    /**
+     * Точка входа в программу.
+     * @param args пользовательские аргументы (игнорируются).
+     */
     public static void main(String[] args) {
-
-        IoManager io = new IoManager();
         String fpath = System.getenv("DATA_SHEET_PATH");
-        if (fpath == null || fpath.isEmpty())
-        {
-            io.printToOutput("Отсутствует переменная среды пути файла! Выбрано стандартное значение.");
+        if (fpath == null || fpath.isEmpty()) {
+            System.out.println("Отсутствует переменная среды пути файла! Выбрано стандартное значение.");
             fpath = "data.csv";
         }
 
-        FileManager file = new FileManager().setFilePath(fpath);
-        try
-        {
-            file.openForReading();
-        }
-        catch (FileNotFoundException ex)
-        {
-            io.printToOutput("Искомый файл базы данных не был найден: " + ex.getMessage());
-            return;
+        Stack<Organization> collection = new Stack<>();
+        try {
+            collection = FileUtility.ReadDatabase(fpath);
+        } catch (FileNotFoundException ex) {
+            System.out.println("Искомый файл базы данных не был найден: " + ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println("Возникла ошибка доступа к файла: " + ex.getMessage());
         }
 
-        CollectionManager collection = new CollectionManager();
-        try
-        {
-            for (String line : file.readAllLines())
-            {
-                collection.addFromCsv(line);
+        CommandUtility commands = new CommandUtility();
+        ArrayList<Command> history = new ArrayList<>(15);
+        Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
+        Context context = new Context(fpath, commands, history, collection, scanner);
+
+        try {
+            while (true) {
+                String input = scanner.nextLine().trim();
+                if (input.isEmpty()) continue;
+
+                String output = commands.execute(input, context);
+                System.out.println(output);
             }
-        }
-        catch (IOException ex)
-        {
-            io.printToOutput("Возникла ошибка доступа к файла: " + ex.getMessage());
-            return;
-        }
-
-        Command[] commands = new Command[] { 
-            new HelpCommand(), new HistoryCommand(), new ExitCommand(), new InfoCommand(), new Show(), new AddCommand(), new ClearCommand(),
-            new Save(), new Reorder()
-        };
-
-        String[] commandNames = new String[commands.length];
-
-        for (int i = 0; i < commands.length; i++)
-        {
-            commandNames[i] = commands[i].getName();
-        }
-
-        PromptManager prompts = new PromptManager(commandNames);
-        Context context = new Context(commands, prompts, collection, io, file);
-        
-        try
-        {
-            while (io.waitForInput())
-            {
-                CommandPrompt prompt = prompts.evaluate(io.lastReadLine());
-                if (prompt == null)
-                {
-                    io.printToOutput("Искомой команды не найдено! Попробуйте воспользоваться командой help!");
-                }
-                else
-                {
-                    commands[prompt.index()].execute(context, prompt.args());
-                }
-            }
-        }
-        catch (IOException ex)
-        {
-            io.printToOutput("Возникла ошибка во время чтения ввода из консоли: " + ex.getMessage());
-        }
-
-        try
-        {
-            io.closeInputReader();
-        }
-        catch (IOException ex)
-        {
-            io.printToOutput("Возникла ошибка во время закрытия потока чтения из консоли: " + ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Возникла ошибка во время чтения ввода из консоли: " + ex.getMessage());
         }
     }
 }

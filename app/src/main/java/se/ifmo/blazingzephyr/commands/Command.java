@@ -7,7 +7,7 @@ import se.ifmo.blazingzephyr.utility.Context;
  * @author blazingzephyr
  * @version 1.0
  */
-public interface Command {
+public interface Command extends Cloneable {
     /**
      * Возвращает наименование команды.
      * @return Короткое наименование команды.
@@ -37,5 +37,5 @@ public interface Command {
      * @param context Контекст исполнения (дополнительные данные комманды).
      * @param args Аргументы команды.
      */
-    void execute(Context context, String[] args);
+    String execute(Context context, String[] args) throws Exception;
 }

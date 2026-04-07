@@ -3,23 +3,34 @@ package se.ifmo.blazingzephyr.commands;
 
 import se.ifmo.blazingzephyr.utility.Context;
 
+/**
+ * Справка о доступных коммандах.
+ * @author blazingzephyr
+ * @version 1.0
+ */
 public class HelpCommand implements Command {
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "help";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getSyntax()
-    {
+    public String getSyntax() {
         return "[--command: String]";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String[] getArguments()
-    {
+    public String[] getArguments() {
         return new String[]
         {
             "command: Команда, информацию о которой требуется узнать.",
@@ -27,61 +38,48 @@ public class HelpCommand implements Command {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getDescription()
-    {
+    public String getDescription() {
         return "Выводит справку по доступным командам.";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void execute(Context context, String[] args)
-    {
+    public String execute(Context ctx, String[] args) {
         StringBuilder builder = new StringBuilder();
-        if (args.length == 0)
-        {
-            builder.append("Список имеющихся команд:");
-            builder.append('\n');
-    
-            for (Command command : context.getAvailableCommands()) {
-                
-                builder.append(command.getName());
-                builder.append(" - ");
-                builder.append(command.getDescription());
-                builder.append('\n');
-            }
-            
-        }
-        else
-        {
-            String cmd = args[0].toLowerCase();
-            for (Command command : context.getAvailableCommands())
-            {
-                if (command.getName() != null && command.getName().toLowerCase().equals(cmd))
-                {
-                    builder.append(command.getName());
-                    builder.append(' ');
-                    builder.append(command.getSyntax());
-                    builder.append('\n');
-                    builder.append("- ");
-                    builder.append(command.getDescription());
-                    builder.append('\n');
-                    
-                    if (command.getArguments().length > 0)
-                    {
-                        builder.append('\n');
+        if (args.length == 0) {
+            builder.append("Список имеющихся команд:\n");
 
-                        for (String s : command.getArguments())
-                        {
-                            builder.append(s);
-                            builder.append('\n');
-                        }
+            for (Command command : ctx.commands().getCommands().values()) {
+                builder.append(String.format(" - %s: %s\n", command.getName(), command.getDescription()));
+            }
+        }
+        else {
+            String cmd = args[0].toLowerCase();
+            if (ctx.commands().getCommands().containsKey(cmd))
+            {
+                Command command = ctx.commands().getCommands().get(cmd);
+                builder.append(String.format("%s %s\n- %s", 
+                    command.getName(),
+                    command.getSyntax(),
+                    command.getDescription()));
+
+                if (command.getArguments().length > 0) {
+                    builder.append('\n');
+
+                    for (String s : command.getArguments()) {
+                        builder.append('\n');
+                        builder.append(s);
                     }
-                    
-                    break;
                 }
             }
         }
-        
-        context.println(builder.toString());
+
+        return builder.toString();
     }
 }

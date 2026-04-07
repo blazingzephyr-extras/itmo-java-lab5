@@ -13,14 +13,14 @@ import java.util.Date;
  */
 public class Organization implements Comparable<Organization> {
     
-    private Long id; // Поле не может быть null, Значение поля должно быть больше 0, уникальное, генерируется автоматически
-    private String name; // Поле не может быть null, Строка не может быть пустой
-    private Coordinates coordinates; // Поле не может быть null
-    private java.util.Date creationDate; // Поле не может быть null, генерируется автоматически
-    private Double annualTurnover; // Поле не может быть null, Значение поля должно быть больше 0
-    private String fullName; // Строка не может быть пустой, Поле не может быть null
-    private OrganizationType type; // Поле не может быть null
-    private Address officialAddress; // Поле не может быть null
+    private Long id;                        // Поле не может быть null, Значение поля должно быть больше 0, уникальное, генерируется автоматически
+    private String name;                    // Поле не может быть null, Строка не может быть пустой
+    private Coordinates coordinates;        // Поле не может быть null
+    private java.util.Date creationDate;    // Поле не может быть null, генерируется автоматически
+    private Double annualTurnover;          // Поле не может быть null, Значение поля должно быть больше 0
+    private String fullName;                // Строка не может быть пустой, Поле не может быть null
+    private OrganizationType type;          // Поле не может быть null
+    private Address officialAddress;        // Поле не может быть null
 
     /**
      * Конструктор для создания новой организации (с id и датой).
@@ -240,12 +240,10 @@ public class Organization implements Comparable<Organization> {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date creationDate;
-        try
-        {
+        try {
             creationDate = sdf.parse(parts[4]);
         }
-        catch (ParseException exception)
-        {
+        catch (ParseException exception) {
             throw new IllegalArgumentException("Некорректный формат даты.");
         }
 
@@ -268,10 +266,10 @@ public class Organization implements Comparable<Organization> {
     }
 
     /**
-     * Сортировка по ID.
+     * Сортировка по name.
      */
     @Override
     public int compareTo(Organization o) {
-        return this.id.compareTo(o.getId());
+        return this.name.compareTo(o.getName());
     }
 }

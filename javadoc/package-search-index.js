@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"se.ifmo.blazingzephyr"},{"l":"se.ifmo.blazingzephyr.commands"},{"l":"se.ifmo.blazingzephyr.model"},{"l":"se.ifmo.blazingzephyr.utility"}];updateSearchResults();

@@ -6,7 +6,7 @@ package se.ifmo.blazingzephyr.model;
  * @version 1.0
  */
 public final class Address {
-    private String street; // Поле не может быть null
+    private String street;  // Поле не может быть null
     private String zipCode; // Поле может быть null
 
     /**
